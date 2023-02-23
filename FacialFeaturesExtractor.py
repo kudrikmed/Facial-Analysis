@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import cv2
 import math
 import numpy as np
+import os.path
 
 
 class FacialFeaturesExtractor:
@@ -40,7 +41,7 @@ class FacialFeaturesExtractor:
         h, w, c = im.shape
         return w, h
 
-    def draw_lip_line_cant(self):
+    def draw_lip_line_cant(self, show=True, save_path=False):
         # left mouth corner landmark
         x1, y1 = self.keypoints[291]["X"] * self.image_width, self.keypoints[291]["Y"] * self.image_height
         # right mouth corner landmark
@@ -58,8 +59,13 @@ class FacialFeaturesExtractor:
         plt.axis('off')
         plt.text(x1, y1 * 1.15, f'{self.get_mouth_corner_tilt()[0]}°', fontsize=14, color="red")
         plt.text(x2, y2 * 1.15, f'{self.get_mouth_corner_tilt()[1]}°', fontsize=14, color="red")
-        plt.savefig('lips_cant.png', bbox_inches='tight')
-        plt.show()
+        if not save_path:
+            plt.savefig('lips_cant.png', bbox_inches='tight')
+        else:
+            plt.savefig(os.path.join(save_path, 'lips_cant.png'), bbox_inches='tight')
+        if show:
+            plt.show()
+        plt.close()
 
     def get_mouth_corner_tilt(self):
         mouth_center = ((self.keypoints[13]["X"] + self.keypoints[14]["X"]) / 2, (self.keypoints[13]["Y"] + self.keypoints[14]["Y"]) / 2)
@@ -95,7 +101,7 @@ class FacialFeaturesExtractor:
     def get_lip_ratio(self):
         return f'1:{round((self.keypoints[14]["Y"] - self.keypoints[17]["Y"]) / (self.keypoints[0]["Y"] - self.keypoints[13]["Y"]), 2)}'
 
-    def draw_lips_ratio(self):
+    def draw_lips_ratio(self, show=True, save_path=False):
         x1, x2 = self.keypoints[0]["X"] * self.image_width, self.keypoints[13]["X"] * self.image_width
         y1, y2 = self.keypoints[0]["Y"] * self.image_height, self.keypoints[13]["Y"] * self.image_height
         x3, x4 = self.keypoints[14]["X"] * self.image_width, self.keypoints[17]["X"] * self.image_width
@@ -111,10 +117,15 @@ class FacialFeaturesExtractor:
         plt.imshow(self.data)
         plt.axis('off')
         plt.text(x1 * 1.15, y1 * 1.1, f'{self.get_lip_ratio()}', fontsize=14, color="red")
-        plt.savefig('lips_ratio.png', bbox_inches='tight')
-        plt.show()
+        if not save_path:
+            plt.savefig('lips_ratio.png', bbox_inches='tight')
+        else:
+            plt.savefig(os.path.join(save_path, 'lips_ratio.png'), bbox_inches='tight')
+        if show:
+            plt.show()
+        plt.close()
 
-    def draw_medial_eyebrow_tilt(self):
+    def draw_medial_eyebrow_tilt(self, show=True, save_path=False):
         # eyebrow apex
         x1, x2 = self.keypoints[334]["X"] * self.image_width, self.keypoints[105]["X"] * self.image_width
         y1, y2 = self.keypoints[334]["Y"] * self.image_height, self.keypoints[105]["Y"] * self.image_height
@@ -133,8 +144,13 @@ class FacialFeaturesExtractor:
         plt.axis('off')
         plt.text(x1, y1, f'{self.get_medial_eyebrow_tilt()[0]}°', fontsize=14, color="red")
         plt.text(x2, y2, f'{self.get_medial_eyebrow_tilt()[1]}°', fontsize=14, color="red")
-        plt.savefig('medial_eyebrow_tilt.png', bbox_inches='tight')
-        plt.show()
+        if not save_path:
+            plt.savefig('medial_eyebrow_tilt.png', bbox_inches='tight')
+        else:
+            plt.savefig(os.path.join(save_path, 'medial_eyebrow_tilt.png'), bbox_inches='tight')
+        if show:
+            plt.show()
+        plt.close()
 
     def get_medial_eyebrow_tilt(self):
         left_brow_tilt = FacialFeaturesExtractor.ang(((self.keypoints[334]["X"], self.keypoints[334]["Y"]), (self.keypoints[285]["X"], self.keypoints[285]["Y"])),
@@ -144,7 +160,7 @@ class FacialFeaturesExtractor:
             self.get_pupil_line())
         return (round(left_brow_tilt, 2), round(right_brow_tilt, 2))
 
-    def draw_brow_apex_projection(self):
+    def draw_brow_apex_projection(self, show=True, save_path=False):
         # eyebrow apex
         x1, x2 = self.keypoints[334]["X"] * self.image_width, self.keypoints[105]["X"] * self.image_width
         y1, y2 = self.keypoints[334]["Y"] * self.image_height, self.keypoints[105]["Y"] * self.image_height
@@ -176,8 +192,13 @@ class FacialFeaturesExtractor:
         plt.axis('off')
         plt.text(x1, y1, f'{self.get_brow_apex_ratio()[0]}', fontsize=14, color="red")
         plt.text(x2, y2, f'{self.get_brow_apex_ratio()[1]}', fontsize=14, color="red")
-        plt.savefig('brow_apex_projection.png', bbox_inches='tight')
-        plt.show()
+        if not save_path:
+            plt.savefig('brow_apex_projection.png', bbox_inches='tight')
+        else:
+            plt.savefig(os.path.join(save_path, 'brow_apex_projection.png'), bbox_inches='tight')
+        if show:
+            plt.show()
+        plt.close()
 
     def get_brow_apex_projection(self):
         # left eyebrow
@@ -224,7 +245,7 @@ class FacialFeaturesExtractor:
         right_ratio = dist_to_pupil_right / dist_right
         return [round(left_ratio, 2), round(right_ratio, 2)]
 
-    def draw_upper_lip_ratio(self):
+    def draw_upper_lip_ratio(self, show=True, save_path=False):
         x1, x2 = self.keypoints[14]["X"] * self.image_width, self.keypoints[152]["X"] * self.image_width
         y1, y2 = self.keypoints[14]["Y"] * self.image_height, self.keypoints[152]["Y"] * self.image_height
         x3, x4 = self.keypoints[2]["X"] * self.image_width, self.keypoints[13]["X"] * self.image_width
@@ -240,13 +261,18 @@ class FacialFeaturesExtractor:
         plt.imshow(self.data)
         plt.axis('off')
         plt.text(x1 * 1.15, y1 * 1.1, f'{self.get_upper_lip_ratio()}', fontsize=14, color="red")
-        plt.savefig('upper_lip_ratio.png', bbox_inches='tight')
-        plt.show()
+        if not save_path:
+            plt.savefig('upper_lip_ratio.png', bbox_inches='tight')
+        else:
+            plt.savefig(os.path.join(save_path, 'upper_lip_ratio.png'), bbox_inches='tight')
+        if show:
+            plt.show()
+        plt.close()
 
     def get_upper_lip_ratio(self):
         return f'1:{round((self.keypoints[14]["Y"] - self.keypoints[152]["Y"]) / (self.keypoints[2]["Y"] - self.keypoints[13]["Y"]), 2)}'
 
-    def draw_canthal_tilt(self):
+    def draw_canthal_tilt(self, show=True, save_path=False):
         x1, x2 = self.keypoints[362]["X"] * self.image_width, self.keypoints[263]["X"] * self.image_width
         y1, y2 = self.keypoints[362]["Y"] * self.image_height, self.keypoints[263]["Y"] * self.image_height
         x3, x4 = self.keypoints[33]["X"] * self.image_width, self.keypoints[133]["X"] * self.image_width
@@ -258,8 +284,13 @@ class FacialFeaturesExtractor:
         plt.axis('off')
         plt.text(x1, y1 * 1.15, f'{self.get_canthal_tilt()[0]}°', fontsize=14, color="red")
         plt.text(x3, y3 * 1.15, f'{self.get_canthal_tilt()[1]}°', fontsize=14, color="red")
-        plt.savefig('canthal_tilt.png', bbox_inches='tight')
-        plt.show()
+        if not save_path:
+            plt.savefig('canthal_tilt.png', bbox_inches='tight')
+        else:
+            plt.savefig(os.path.join(save_path, 'canthal_tilt.png'), bbox_inches='tight')
+        if show:
+            plt.show()
+        plt.close()
 
     def get_canthal_tilt(self):
         left_eye_tilt = FacialFeaturesExtractor.ang(((self.keypoints[362]["X"], self.keypoints[362]["Y"]), (self.keypoints[263]["X"], self.keypoints[263]["Y"])),
@@ -268,7 +299,7 @@ class FacialFeaturesExtractor:
                              self.get_pupil_line())
         return (round(180 - left_eye_tilt, 2), round(180 - right_eye_tilt, 2))
 
-    def draw_bigonial_bizygomatic_ratio(self):
+    def draw_bigonial_bizygomatic_ratio(self, show=True, save_path=False):
         x1, x2 = self.keypoints[172]["X"] * self.image_width, self.keypoints[397]["X"] * self.image_width
         y1, y2 = self.keypoints[172]["Y"] * self.image_height, self.keypoints[397]["Y"] * self.image_height
         x3, x4 = self.keypoints[234]["X"] * self.image_width, self.keypoints[454]["X"] * self.image_width
@@ -289,8 +320,13 @@ class FacialFeaturesExtractor:
                      self.keypoints[234]["Y"] * self.image_height, self.keypoints[454]["Y"] * self.image_height]
         center_point = sum(x_centers) / len(x_centers), sum(y_centers) / len(y_centers)
         plt.text(center_point[0], center_point[1], f'{self.get_bigonial_bizygomatic_ratio()}', fontsize=14, color="red")
-        plt.savefig('bigonial_bizygomatic_ratio.png', bbox_inches='tight')
-        plt.show()
+        if not save_path:
+            plt.savefig('bigonial_bizygomatic_ratio.png', bbox_inches='tight')
+        else:
+            plt.savefig(os.path.join(save_path, 'bigonial_bizygomatic_ratio.png'), bbox_inches='tight')
+        if show:
+            plt.show()
+        plt.close()
 
     def get_bigonial_bizygomatic_ratio(self):
         return f'{round((self.keypoints[172]["X"] - self.keypoints[397]["X"]) / (self.keypoints[234]["X"] - self.keypoints[454]["X"]), 2)}'

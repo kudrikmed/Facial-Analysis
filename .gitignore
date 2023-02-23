@@ -1,0 +1,14 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!Facial Analysis.ipynb
+!FaceCropper.py
+!FacialFeaturesExtractor.py
+!TelegramBot.py
+!text.txt
+# etc...
+
+# ...even if they are in subdirectories
+!*/
